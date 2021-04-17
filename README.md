@@ -9,7 +9,7 @@ This is a memory and CPU efficient implementation of WS2812B library for STM32 p
 **See my other repositories for L0, F1 and F3 port.**
 
 The example is implemented for STM32F4 line with TIM1 and DMA2. The DMA2 is necessary because only this DMA has access to the AHB1 bus where the GPIO peripheral is located.
-Project is made in Atollic TrueStudio but you can compile it with any ARM-GCC. It is possible to change the code to work based on other timer or STM F1, F2 or F4 line. This version is using STM HAL library.
+Original project is made in Atollic TrueStudio but you can compile it with any ARM-GCC. *Blackpill version was converted to STM32CubeIDE*. It is possible to change the code to work based on other timer or STM F1, F2 or F4 line. This version is using STM HAL library.
 
 
 
@@ -92,7 +92,7 @@ void visHandle()
 }
 ```
 
-##How the lib works
+## How the lib works
 
 WS2812B has specific communication protocol and it is necessary to bend some standard peripherals to use this protocol. The most easy approach would be implement blocking cycle-exact code in assembly that will spit out ones and zeroes as we need. This is implemented in NeoPixel library for AVR and ARM processor.
 
@@ -104,7 +104,7 @@ Based on your longest LED strip the octo library creates an array uint16_r buffe
 
 The DMA has of course some small jitter but when you run this lib on anything above 40MHz it is fine. The jitter is within the WS2812 specification so don't worry. When I run similar code on old STM32F100 on maximal CPU freq 24MHz (F100 line is slow), I had big jitter when the DMA was battling with CPU interrupt bus access. I overclocked the STM32F100 little bit (exactly twice the speed to 48MHz :Đ) and it works without issues.
 
-##My library has few improvements:
+## My library has few improvements:
 
 ### One separate buffer for your (big) framebuffer and second small internal bitbuffer for DMA.
 **RGB framebuffer** - this is one dimension array with {R1, G1, B1, R2, G2, B2, ...} format.
