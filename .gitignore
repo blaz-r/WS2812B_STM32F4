@@ -2,3 +2,7 @@
 Debug/STM32F4_WS2812B.elf
 Debug/STM32F4_WS2812B.map
 Debug/STM32F4_WS2812B.list
+/Debug/
+.cproject_org
+.project_org
+STM32F4_WS2812B_converter.log
