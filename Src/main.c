@@ -77,7 +77,7 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
 
-  visInit();
+  visInit("GRB");
 
   /* USER CODE END 2 */
 

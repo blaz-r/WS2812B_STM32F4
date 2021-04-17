@@ -8,6 +8,9 @@
   	  	  http://www.martinhubacek.cz
   	  	  @hubmartin
 
+  Changed by: Blaz Rolih
+		  	  @blaz-r
+
   Licence: MIT License
 
 */
@@ -19,11 +22,13 @@
 #include <stdlib.h>
 
 // RGB Framebuffers
-uint8_t frameBuffer[3*60];
+uint8_t frameBuffer[3*WS2812B_NUMBER_OF_LEDS];
 uint8_t frameBuffer2[3*20];
 
+uint8_t indexR = 0, indexG = 1, indexB = 2;
+
 // Helper defines
-#define newColor(r, g, b) (((uint32_t)(r) << 16) | ((uint32_t)(g) <<  8) | (b))
+#define newColor(r, g, b) (((uint32_t)(r) << 8 * indexR) | ((uint32_t)(g) <<  8 * indexG) | (b) << 8 * indexB)	// makes color according to order of RGB
 #define Red(c) ((uint8_t)((c >> 16) & 0xFF))
 #define Green(c) ((uint8_t)((c >> 8) & 0xFF))
 #define Blue(c) ((uint8_t)(c & 0xFF))
@@ -114,11 +119,24 @@ void visHandle2()
 	}
 }
 
+// Fill entire strip with selected color
+void visFill(uint8_t *frameBuffer, uint32_t frameBufferSize, uint32_t color) {
+	for(int i = 0; i < frameBufferSize / 3; i++) {
+		frameBuffer[i*3 + 0] = color & 0xFF;
+		frameBuffer[i*3 + 1] = color >> 8 & 0xFF;
+		frameBuffer[i*3 + 2] = color >> 16 & 0xFF;
+	}
+}
 
-void visInit()
+
+void visInit(char* order)
 {
-
 	uint8_t i;
+
+	// This initializes indexes used to shift each color into correct position. The shifting is used in newColor(r, g, b)
+	indexR = strchr(order, 'R') - order;
+	indexG = strchr(order, 'G') - order;
+	indexB = strchr(order, 'B') - order;
 
 	// HELP
 	// Fill the 8 structures to simulate overhead of 8 paralel strips
@@ -127,6 +145,7 @@ void visInit()
 
 	// 4 paralel output LED strips needs 18% overhead during TX
 	// 8 paralel output LED strips overhead is 8us of 30us period which is 28% - see the debug output PD15/13
+
 
 	// If you need more parallel LED strips, increase the WS2812_BUFFER_COUNT value
 	for( i = 0; i < WS2812_BUFFER_COUNT; i++)
@@ -161,6 +180,8 @@ void visHandle()
 	{
 		// Update your framebuffer here or swap buffers
 		visHandle2();
+
+		//visFill(frameBuffer, sizeof(frameBuffer), newColor(0, 255, 0));
 
 		// Signal that buffer is changed and transfer new data
 		ws2812b.startTransfer = 1;

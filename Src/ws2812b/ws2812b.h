@@ -9,7 +9,7 @@
   	  	  @hubmartin
 
   Changed by: Blaz Rolih
-  	  	  	  blaz-r
+  	  	  	  @blaz-r
 
   Licence: MIT License
 

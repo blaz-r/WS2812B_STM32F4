@@ -1,4 +1,8 @@
 # LowMEM ws2812b library ( STM32F4_WS2812B )
+Library forked from https://github.com/hubmartin/WS2812B_STM32F4 and changed a bit to work with blackpill (stm32f411). I also added support for different orders of RGB configuration (GRB, BRG ...). Below is the info from original version of library, it works in almost the same way, just visInit function now takes order of colors ("RGB", "GRB" ...).
+
+## Original info:
+
 This is a memory and CPU efficient implementation of WS2812B library for STM32 processors. **You have to compile it with -Og or at least -O1 optimizations to take advantage of it.**
 
 
@@ -21,11 +25,13 @@ The library is in the /src/ws2812b directory and example of init, redraw and eff
 in ws2812b.h you have to set few defines:
 ```
 // GPIO clock peripheral enable command
-#define WS2812B_GPIO_CLK_ENABLE() __HAL_RCC_GPIOC_CLK_ENABLE()
-// LED output port
-#define WS2812B_PORT GPIOC
+#define WS2812B_GPIO_CLK_ENABLE() __HAL_RCC_GPIOA_CLK_ENABLE()
+// LED output port.
+#define WS2812B_PORT GPIOA
 // LED output pins
 #define WS2812B_PINS (GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3)
+// This all indicates that led data pin is on A0 and others on A1, A2 and A3.
+
 // How many LEDs are in the series
 #define WS2812B_NUMBER_OF_LEDS 60
 // Number of paralel LED strips on the SAME gpio. Each has its own buffer.
@@ -35,11 +41,16 @@ in ws2812b.h you have to set few defines:
 Then in your code initialize the structure and call the init function:
 ```
 // RGB Framebuffers
-uint8_t frameBuffer[3*60];
+uint8_t frameBuffer[3*WS2812B_NUMBER_OF_LEDS];
 uint8_t frameBuffer2[3*20];
 
-void visInit()
+void visInit(char* order)
 {
+	// Handling of different orders of RGB
+	indexR = strchr(order, 'R') - order;
+	indexG = strchr(order, 'G') - order;
+	indexB = strchr(order, 'B') - order;
+
 	// Set output channel/pin, GPIO_PIN_0 = 0, for GPIO_PIN_5 = 5 - this has to correspond to WS2812B_PINS
 	ws2812b.item[0].channel = 0;
 	// Your RGB framebuffer
@@ -55,6 +66,8 @@ void visInit()
 	ws2812b_init();
 }
 ```
+Order of RGB is often GRB, so if you don't know your strips configuration it's recommended you try that first.
+
 You can also use one framebuffer on many outputs.
 
 When the framebuffer is shorter than the WS2812B_NUMBER_OF_LEDS the framebuffer wraps over, nothing breaks. This is great if you would like to have 500 LEDs in one strip but you only need to repeat 8,16,.. animated pixels.
