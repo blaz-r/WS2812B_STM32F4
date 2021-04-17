@@ -1,24 +1,25 @@
-# LowMEM ws2812b library ( STM32F4_WS2812B )
-Library forked from https://github.com/hubmartin/WS2812B_STM32F4 and changed a bit to work with blackpill (stm32f411). I also added support for different orders of RGB configuration (GRB, BRG ...). Below is the info from original version of library, it works in almost the same way, just visInit function now takes order of colors ("RGB", "GRB" ...).
+# LowMEM ws2812b library ( STM32F411_WS2812B )
 
-## Original info:
+Library forked from https://github.com/hubmartin/WS2812B_STM32F4 and changed a bit to work with blackpill (STM32F411). I also added support for different orders of RGB configuration (GRB, BRG ...). Bellow is the information from original version of library, updated according to changes I made. It works in almost the same way as originally, just *visInit()* function now takes order of colors ("RGB", "GRB" ...).
+
+## Information:
 
 This is a memory and CPU efficient implementation of WS2812B library for STM32 processors. **You have to compile it with -Og or at least -O1 optimizations to take advantage of it.**
 
 
-**See my other repositories for L0, F1 and F3 port.**
+**See @hubmartins other repositories for L0, F1 and F3 port.**
 
 The example is implemented for STM32F4 line with TIM1 and DMA2. The DMA2 is necessary because only this DMA has access to the AHB1 bus where the GPIO peripheral is located.
 Original project is made in Atollic TrueStudio but you can compile it with any ARM-GCC. *Blackpill version was converted to STM32CubeIDE*. It is possible to change the code to work based on other timer or STM F1, F2 or F4 line. This version is using STM HAL library.
 
 
 
-**If you like this library, please let me know, follow me @hubmartin.**
+**If you like this library, please let original author know, follow @hubmartin.**
 
-**Also subscribing to my electronics youtube channel https://www.youtube.com/user/hubmartin with practical videos and teardowns will motivate me to make more content for community. Thank you.**
+**Also subscribing to their electronics youtube channel https://www.youtube.com/user/hubmartin with practical videos and teardowns will motivate them to make more content for community. Thank you.**
 
 
-Here I explain the using of lib. Under this example below is explained how lib works under the hood
+Here I explain the using of lib. Under this example below is explained how lib works under the hood.
 
 The library is in the /src/ws2812b directory and example of init, redraw and effects are in src/visEffect.c file.
 
